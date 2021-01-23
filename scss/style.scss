@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  .preload {
+    transition: none !important; 
+  }
+}
+
+.game-field {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: stretch;
+  align-items: stretch;
+  justify-content: center;
+  align-content: center;
+  background-color: bisque;
+  margin: 0, auto;
+  width: 400px;
+  height: 400px;
+  padding: 16px;
+  gap: 16px;
+  &__chip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: burlywood;
+    font-size: 24pt;
+    font-family: 'Nunito', sans-serif;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 4px;
+    &--active {
+      visibility: hidden;
+      background-color: cadetblue;
+    }
+    &:hover {
+      background-color: white;
+      color: crimson;
+      transition: color .1s ease-in-out, background-color .1s ease-in-out;
+    }
+  }
+}

@@ -69,6 +69,7 @@ body .preload {
 }
 
 .game-field__chip--active {
+  visibility: hidden;
   background-color: cadetblue;
 }
 
