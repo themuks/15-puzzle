@@ -6,7 +6,7 @@ window.onload = () => {
     for (let i = 0; i < 16; i++) {
         gameField.push(i + 1);
     }
-    randomizeGameField(gameField);
+    randomizeGameField(gameField, 1000);
     let chips = document.querySelectorAll('.game-field__chip');
     chips.forEach((e) => {
         e.addEventListener('click', () => {
@@ -24,12 +24,16 @@ function chipOnClick(text) {
         gameField[clickedChipIndex] = gameField[emptyChipIndex];
         gameField[emptyChipIndex] = temp;
     }
-    setTimeout(() => {
-        if (isWinPosition(gameField)) {
+    if (isWinPosition(gameField)) {
+        setTimeout(() => {
+            redrawGameField(gameField);
             alert("You won!");
-        }
-    }, 100);
-    redrawGameField(gameField);
+            randomizeGameField(gameField, 1000);
+            redrawGameField(gameField);
+        }, 100);
+    } else {
+        redrawGameField(gameField);
+    }
 }
 
 function isEmptyChipNear(clickedChipIndex, emptyChipIndex) {
@@ -56,13 +60,19 @@ function redrawGameField(gameField) {
     }
 }
 
-function randomizeGameField(gameField) {
-    let length = gameField.length;
-    for (let i = 0; i < length; i++) {
-        let randomInt = Math.floor(Math.random(length) * length);
-        const temp = gameField[i];
-        gameField[i] = gameField[randomInt];
-        gameField[randomInt] = temp;
+function randomizeGameField(gameField, count) {
+    let emptyChipIndex = gameField.indexOf(16);
+    for (let i = 0; i < count; i++) {
+        let randomInt = Math.floor(Math.random() * 4);
+        let newIndex = emptyChipIndex;
+        let moves = [1, 4, -1, -4];
+        //console.log(randomInt);
+        newIndex = Math.abs(newIndex + moves[randomInt]) % 16;
+        console.log(newIndex);
+        const temp = gameField[newIndex];
+        gameField[newIndex] = gameField[emptyChipIndex];
+        gameField[emptyChipIndex] = temp;
+        emptyChipIndex = newIndex;
     }
 }
 
