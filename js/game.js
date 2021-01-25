@@ -3,6 +3,8 @@
 let gameField = [];
 
 window.onload = () => {
+    let body = document.querySelector('body');
+    body.classList.remove('preload')
     for (let i = 0; i < 16; i++) {
         gameField.push(i + 1);
     }
@@ -10,19 +12,23 @@ window.onload = () => {
     let chips = document.querySelectorAll('.game-field__chip');
     chips.forEach((e) => {
         e.addEventListener('click', () => {
-            chipOnClick(e.innerHTML);
+            chipOnClick(e, chips);
         });
     });
     redrawGameField(gameField);
 };
 
-function chipOnClick(text) {
-    let clickedChipIndex = gameField.indexOf(Number(text));
+function chipOnClick(element, chips) {
+    let clickedChipIndex = gameField.indexOf(Number(element.innerHTML));
     let emptyChipIndex = gameField.indexOf(16);
     if (isEmptyChipNear(clickedChipIndex, emptyChipIndex)) {
         const temp = gameField[clickedChipIndex];
         gameField[clickedChipIndex] = gameField[emptyChipIndex];
         gameField[emptyChipIndex] = temp;
+        chips[clickedChipIndex].classList.add('game-field__chip--active');
+        chips[clickedChipIndex].innerHTML = gameField[clickedChipIndex];
+        chips[emptyChipIndex].classList.remove('game-field__chip--active');
+        chips[emptyChipIndex].innerHTML = gameField[emptyChipIndex];
     }
     if (isWinPosition(gameField)) {
         setTimeout(() => {
@@ -31,21 +37,17 @@ function chipOnClick(text) {
             randomizeGameField(gameField, 1000);
             redrawGameField(gameField);
         }, 100);
-    } else {
-        redrawGameField(gameField);
     }
 }
 
 function isEmptyChipNear(clickedChipIndex, emptyChipIndex) {
-    switch (clickedChipIndex) {
-        case emptyChipIndex + 1:
-        case emptyChipIndex + 4:
-        case emptyChipIndex - 1:
-        case emptyChipIndex - 4:
+    let moves = [1, 4, -1, -4];
+    for (let i = 0; i < moves.length; i++) {
+        if (clickedChipIndex == emptyChipIndex + moves[i]) {
             return true;
-        default:
-            return false;
+        }
     }
+    return false;
 }
 
 function redrawGameField(gameField) {
@@ -66,9 +68,7 @@ function randomizeGameField(gameField, count) {
         let randomInt = Math.floor(Math.random() * 4);
         let newIndex = emptyChipIndex;
         let moves = [1, 4, -1, -4];
-        //console.log(randomInt);
         newIndex = Math.abs(newIndex + moves[randomInt]) % 16;
-        console.log(newIndex);
         const temp = gameField[newIndex];
         gameField[newIndex] = gameField[emptyChipIndex];
         gameField[emptyChipIndex] = temp;
